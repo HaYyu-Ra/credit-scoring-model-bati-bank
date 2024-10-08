@@ -42,18 +42,17 @@ categorical_features = ['CurrencyCode', 'CountryCode', 'ProductCategory', 'Fraud
 
 for feature in categorical_features:
     plt.figure(figsize=(10, 6))
-    sns.countplot(x=feature, data=data, order=data[feature].value_counts().index)  # Order by frequency
+    sns.countplot(x=feature, data=data, order=data[feature].value_counts().index)  # Order by count
     plt.title(f'Distribution of {feature}', fontsize=16)
     plt.xlabel(feature, fontsize=12)
-    plt.ylabel('Count', fontsize=12)
+    plt.ylabel('Count', fontsize=12)  # Changed 'Frequency' back to 'Count'
     plt.xticks(rotation=45)  # Rotate labels for better readability
     plt.grid(axis='y')
     plt.show()
 
 # 5. Correlation Analysis
 # Only compute the correlation matrix for numerical columns
-numerical_data = data[numerical_features]  # Select only numerical features
-correlation_matrix = numerical_data.corr()  # Compute correlation matrix
+correlation_matrix = data[numerical_features].corr()  # Compute correlation matrix
 
 plt.figure(figsize=(10, 8))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
@@ -67,7 +66,7 @@ print(missing_values[missing_values > 0])  # Only print columns with missing val
 
 # Heatmap of Missing Values
 plt.figure(figsize=(12, 6))
-sns.heatmap(data.isnull(), cbar=False, cmap='viridis')
+sns.heatmap(data.isnull(), cbar=False, cmap='viridis', yticklabels=False)  # Remove y-axis labels for clarity
 plt.title('Missing Data Heatmap', fontsize=16)
 plt.show()
 
@@ -79,3 +78,32 @@ for feature in numerical_features:
     plt.xlabel(feature, fontsize=12)
     plt.grid(axis='y')
     plt.show()
+
+# 8. Additional Analysis: Fraud and Amount
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='FraudResult', y='Amount', data=data)
+plt.title('Transaction Amount by Fraud Status', fontsize=16)
+plt.xlabel('Fraud Status (0: No, 1: Yes)', fontsize=12)
+plt.ylabel('Transaction Amount', fontsize=12)
+plt.grid(axis='y')
+plt.show()
+
+# 9. Further Analysis: Distribution of Transaction Start Time
+data['TransactionStartTime'] = pd.to_datetime(data['TransactionStartTime'])
+plt.figure(figsize=(10, 6))
+sns.histplot(data['TransactionStartTime'].dt.hour, bins=24, kde=True)
+plt.title('Distribution of Transactions by Hour', fontsize=16)
+plt.xlabel('Hour of Day', fontsize=12)
+plt.ylabel('Frequency', fontsize=12)
+plt.grid(axis='y')
+plt.show()
+
+# 10. Transaction Amount by Country
+plt.figure(figsize=(12, 6))
+sns.boxplot(x='CountryCode', y='Amount', data=data)
+plt.title('Transaction Amount by Country', fontsize=16)
+plt.xlabel('Country Code', fontsize=12)
+plt.ylabel('Transaction Amount', fontsize=12)
+plt.xticks(rotation=45)
+plt.grid(axis='y')
+plt.show()
