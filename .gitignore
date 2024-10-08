@@ -1,0 +1,13 @@
+# Ignore virtual environment directory
+.venv/
+
+# Ignore pickle files
+*.pkl
+
+# Ignore CSV files
+*.csv
+
+# Ignore Excel files
+*.xlsx
+
+# Ignore other large files explicitly or via Git LFS
